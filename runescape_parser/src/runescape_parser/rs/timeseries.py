@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
-from rs.item import Item
-from rs.api_wrapper import RSApi
-from rs.timestep import Timestep
+from runescape_parser.rs.item import Item
+from runescape_parser.rs.api_wrapper import RSApi
+from runescape_parser.rs.timestep import Timestep
 
 class TimeSeries(pd.DataFrame):
     def __init__(self, item:Item, timestep:Timestep):
@@ -17,7 +17,6 @@ class TimeSeries(pd.DataFrame):
         self.volume_mean = self['meanVolume'].mean()
         self.price_stddev = self['meanPrice'].std()
         self.volume_stddev = self['meanVolume'].std()
-        self.score = (self.price_stddev / self.price_mean) + 3 * (self.volume_mean / (self.volume_stddev + self.volume_mean))
 
     def insert_mean_column(self, col_names, name):
         """

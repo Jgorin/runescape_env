@@ -1,5 +1,5 @@
 import httpx
-from timestep import Timestep
+from runescape_parser.rs.timestep import Timestep
 
 class RSApi:
     root_path = "https://prices.runescape.wiki/api/v1/osrs"
