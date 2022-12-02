@@ -17,6 +17,7 @@ class TimeSeries(pd.DataFrame):
         self.volume_mean = self['meanVolume'].mean()
         self.price_stddev = self['meanPrice'].std()
         self.volume_stddev = self['meanVolume'].std()
+        self.potential_profit = self.item.buy_limit * self.price_stddev
 
     def insert_mean_column(self, col_names, name):
         """
@@ -37,6 +38,15 @@ class TimeSeries(pd.DataFrame):
         for i in range(0, length, segment_length):
             res.append(self[col_names].iloc[i:i+segment_length-1])
         return np.array(res, dtype=object)
+    
+    def tostring(self, print_data=True):
+        res = f"{self.item.name}, buy limit: {self.item.buy_limit}, POTENTIAL PROFIT: {self.potential_profit}\n"
+        res += f"PRICE: mean: {self.price_mean}, stddev: {self.price_stddev}\n"
+        res += f"VOLUME: mean: {self.volume_mean}, stddev: {self.volume_stddev}\n"
+        res += f"SLOPE: {np.polyfit(x=self['timestamp'].tolist(), y=self['meanPrice'].tolist(), deg=1)[0]}"
+        if print_data:
+            res += str(self.iloc[:4].append(self.iloc[-4:]))
+        return res
 
     @staticmethod
     def from_name(name:str, timestep:Timestep):
