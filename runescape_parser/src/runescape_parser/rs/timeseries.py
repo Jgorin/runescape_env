@@ -37,7 +37,7 @@ class TimeSeries(pd.DataFrame):
         for i in range(0, length, segment_length):
             res.append(self[col_names].iloc[i:i+segment_length-1])
         return np.array(res, dtype=object)
-        
+
     @staticmethod
     def from_name(name:str, timestep:Timestep):
         return TimeSeries(Item(name), timestep)
