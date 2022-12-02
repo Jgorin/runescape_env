@@ -18,7 +18,7 @@ def is_item_good_candidate(ts):
 def scan():
     for item in Item.members.query(f'value > {HIGH_ALCH_VALUE_CUTOFF}')['name']:
         try:
-            ts = TimeSeries.from_name(item, Timestep.ONE_HOUR)
+            ts = TimeSeries.from_name(item, TIMESTEP)
             is_good_candidate, is_great_candidate = is_item_good_candidate(ts)
             if is_good_candidate:
                     color = Fore.GREEN if is_great_candidate else Fore.YELLOW
