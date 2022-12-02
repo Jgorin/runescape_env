@@ -43,9 +43,9 @@ class TimeSeries(pd.DataFrame):
         res = f"{self.item.name}, buy limit: {self.item.buy_limit}, POTENTIAL PROFIT: {self.potential_profit}\n"
         res += f"PRICE: mean: {self.price_mean}, stddev: {self.price_stddev}\n"
         res += f"VOLUME: mean: {self.volume_mean}, stddev: {self.volume_stddev}\n"
-        res += f"SLOPE: {np.polyfit(x=self['timestamp'].tolist(), y=self['meanPrice'].tolist(), deg=1)[0]}"
+        res += f"SLOPE: {np.polyfit(x=self['timestamp'].tolist(), y=self['meanPrice'].tolist(), deg=1)[0]}\n"
         if print_data:
-            res += str(self.iloc[:4].append(self.iloc[-4:]))
+            res += str(pd.concat([self.iloc[:5],self.iloc[-5:]]))
         return res
 
     @staticmethod
