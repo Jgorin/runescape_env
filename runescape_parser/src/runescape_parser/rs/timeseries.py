@@ -17,7 +17,7 @@ class TimeSeries(pd.DataFrame):
         self.volume_mean = self['meanVolume'].mean()
         self.price_stddev = self['meanPrice'].std()
         self.volume_stddev = self['meanVolume'].std()
-        self.potential_profit = self.item.buy_limit * self.price_stddev
+        self.potential_profit = self.calculate_potential_profit()
 
     def insert_mean_column(self, col_names, name):
         """
@@ -47,6 +47,10 @@ class TimeSeries(pd.DataFrame):
         if print_data:
             res += str(pd.concat([self.iloc[:5],self.iloc[-5:]]))
         return res
+
+    def calculate_potential_profit(self):
+        mult = self.volume_mean if self.volume_mean < self.item.buy_limit else self.item.buy_limit
+        return mult * self.price_stddev
 
     @staticmethod
     def from_name(name:str, timestep:Timestep):

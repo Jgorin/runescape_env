@@ -4,26 +4,23 @@ import numpy as np
 from datetime import datetime
 import pathlib
 import os
+import yaml
 
 PROJECT_PATH = pathlib.Path(__file__).resolve()
 while PROJECT_PATH != None and PROJECT_PATH.name != "runescape_env" and PROJECT_PATH.name != '':
     PROJECT_PATH = PROJECT_PATH.parent    
 SCANS_DIR = os.path.join(PROJECT_PATH, 'scans')
 
-PRICE_DEVIANCE_THRESHOLD = 0.3
-VOL_DEVIANCE_THRESHOLD = 0.5
-VOL_MEAN_THRESHOLD = 10
-HIGH_ALCH_VALUE_CUTOFF = 10
+CONFIG = yaml.load("config.yaml")
 TIMESTEP = Timestep.ONE_DAY
-
 SAVE_SCAN = True
 
 def is_item_good_candidate(ts):
-    return (ts.volume_mean > VOL_MEAN_THRESHOLD and \
-           ts.volume_stddev < ts.volume_mean * VOL_DEVIANCE_THRESHOLD and \
-           ts.price_stddev > ts.price_mean * PRICE_DEVIANCE_THRESHOLD and \
+    return (ts.volume_mean > CONFIG['vol_mean_threshold'] and \
+           ts.volume_stddev < ts.volume_mean * CONFIG['vol_deviance_threshold'] and \
+           ts.price_stddev > ts.price_mean * CONFIG['price_deviance_threshold'] and \
            np.polyfit(x=ts['timestamp'].tolist(), y=ts['meanPrice'].tolist(), deg=1)[0] > 0.0001, \
-           ts.price_stddev > ts.price_mean * PRICE_DEVIANCE_THRESHOLD * 1.25)
+           ts.price_stddev > ts.price_mean * CONFIG['price_deviance_threshold'] * 1.25)
 
 def save_scan(hits):
     hits.sort(key=lambda ts: ts.potential_profit, reverse=True)
@@ -34,7 +31,7 @@ def save_scan(hits):
 
 def scan():
     hits = []
-    for item in Item.members.query(f'value > {HIGH_ALCH_VALUE_CUTOFF}')['name']:
+    for item in Item.members.query(f'value > {CONFIG["high_alch_threshold"]}')['name']:
         try:
             ts = TimeSeries.from_name(item, TIMESTEP)
             is_good_candidate, is_great_candidate = is_item_good_candidate(ts)

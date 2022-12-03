@@ -1,0 +1,5 @@
+ONE_DAY:
+  price_deviance_threshold: 0.3
+  vol_deviance_threshold: 0.5
+  vol_mean_threshold: 10
+  high_alch_threshold: 100
