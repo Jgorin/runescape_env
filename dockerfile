@@ -14,9 +14,10 @@ RUN python3.10 -m venv $VIRTUAL_ENV; \
     
 WORKDIR "${HOME}"
 
-RUN git clone "https://github.com/Jgorin/runescape_env"; \
-    cd runescape_env/runescape_parser; \
+COPY runescape_parser runescape_env/runescape_parser
+RUN cd runescape_env/runescape_parser; \
     pip install -r requirements.txt; \
     pip install -e .
 
+COPY scans runescape_env/scans
 RUN echo 'alias scan="python ${HOME}/runescape_env/runescape_parser/src/runescape_parser/scan.py"' >> ~/.bashrc

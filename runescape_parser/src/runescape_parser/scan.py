@@ -2,17 +2,17 @@ from runescape_parser.rs.timeseries import TimeSeries, Timestep, Item
 from colorama import Fore
 import numpy as np
 from datetime import datetime
-import pathlib
+from runescape_parser.utils import resolve_path
 import os
 import yaml
 
-PROJECT_PATH = pathlib.Path(__file__).resolve()
-while PROJECT_PATH != None and PROJECT_PATH.name != "runescape_env" and PROJECT_PATH.name != '':
-    PROJECT_PATH = PROJECT_PATH.parent    
-SCANS_DIR = os.path.join(PROJECT_PATH, 'scans')
+PROJECT_PATH = resolve_path(__file__, 'runescape_env')
+SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
+SAVE_DIR = os.path.join(PROJECT_PATH, 'scans')
+CONFIG_PATH = os.path.join(SCRIPT_PATH, "config.yaml")
 
-CONFIG = yaml.load("config.yaml")
 TIMESTEP = Timestep.ONE_DAY
+CONFIG = yaml.safe_load(open(CONFIG_PATH))[TIMESTEP.name]
 SAVE_SCAN = True
 
 def is_item_good_candidate(ts):
@@ -25,7 +25,7 @@ def is_item_good_candidate(ts):
 def save_scan(hits):
     hits.sort(key=lambda ts: ts.potential_profit, reverse=True)
     log = f"\n\n{'='*80}\n\n".join([hit.tostring() for hit in hits])
-    full_file = os.path.join(SCANS_DIR, f"{str(datetime.now())}.txt")
+    full_file = os.path.join(SAVE_DIR, f"{str(datetime.now())}.txt")
     with open(full_file, 'w') as file:
         file.write(log)
 
