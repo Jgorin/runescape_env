@@ -1,5 +1,10 @@
+save: true
+stdout: true
+
 ONE_DAY:
   price_deviance_threshold: 0.3
   vol_deviance_threshold: 0.5
   vol_mean_threshold: 10
   high_alch_threshold: 100
+  linear_fit_slope_threshold: 0.0001
+  great_threshold: 1.25
