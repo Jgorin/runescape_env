@@ -14,9 +14,8 @@ RUN python3.10 -m venv $VIRTUAL_ENV; \
     
 WORKDIR "${HOME}"
 
-RUN git clone "https://github.com/Jgorin/runescape_env"
-
-RUN cd runescape_env/runescape_parser; \
+RUN git clone "https://github.com/Jgorin/runescape_env"; \
+    cd runescape_env/runescape_parser; \
     pip install -r requirements.txt; \
     pip install -e .
 

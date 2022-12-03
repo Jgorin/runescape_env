@@ -3,4 +3,3 @@ httpx
 numpy
 pandas
 pyarrow
-yaml
